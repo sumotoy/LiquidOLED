@@ -33,20 +33,20 @@ to experimenting modes.
 MCP23S17 --> WEH001602A display<br>
 Can work at 3V3 or 5V.<br>
 
-	  RW	-->	  IOB-0 [|   U  |] IOA-7	-->	D7<br>
-	  RS  -->	  IOB-1 [| 	    |] IOA-6	-->	D6<br>
-	  E   -->	  IOB-2 [| 	    |] IOA-5	-->	D5<br>
-			      IOB-3 [| 	    |] IOA-4	-->	D4<br>
-			      IOB-4 [| 	    |] IOA-3	-->	D3<br>
-			      IOB-5 [| 	    |] IOA-2	-->	D2<br>
-			      IOB-6 [| 	    |] IOA-1	-->	D1<br>
-			      IOB-7 [| 	    |] IOA-0	-->	D0<br>
-			      ++++  [| 	    |] [INT-A] not used<br>
-			      GND   [| 	    |] [INT-B] not used<br>
-			   	 CS     [| 	    |] RST (connect to +++)<br>
-			     SCK    [| 	    |] A2	*see addressing<br>
-			      MOSI  [| 	    |] A1   *see addressing<br>
-		    [not used]  [|______|] A0	*see addressing<br>
+	  RW	-->	  IOB-0 [|   U  |] IOA-7	-->	D7
+	  RS  -->	  IOB-1 [| 	    |] IOA-6	-->	D6
+	  E   -->	  IOB-2 [| 	    |] IOA-5	-->	D5
+			      IOB-3 [| 	    |] IOA-4	-->	D4
+			      IOB-4 [| 	    |] IOA-3	-->	D3
+			      IOB-5 [| 	    |] IOA-2	-->	D2
+			      IOB-6 [| 	    |] IOA-1	-->	D1
+			      IOB-7 [| 	    |] IOA-0	-->	D0
+			      ++++  [| 	    |] [INT-A] not used
+			      GND   [| 	    |] [INT-B] not used
+			   	 CS     [| 	    |] RST (connect to +++)
+			     SCK    [| 	    |] A2	*see addressing
+			      MOSI  [| 	    |] A1   *see addressing
+		    [not used]  [|______|] A0	*see addressing
 		
 	*Addressing (see MCP23s17 datasheet)<br>
 	Ground all 3 will result in 0x20	<br>
