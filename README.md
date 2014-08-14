@@ -1,12 +1,12 @@
-A driver for winstar WEH001602A Text OLED Module 16*2 that uses 3 wires.<br>
+A driver for winstar <b>WEH001602A</b> Text OLED Module 16*2 that uses 3 wires.<br>
 
 Attention! <br>
----> This driver uses a GPIO Chip called MCP23S17! <---<br>
----> Alpha development stage! Text working 100%, still develop graphic mode <---<br>
+---> This driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
+---> <u>Alpha development stage!</u> Text working 100%, still develop graphic mode <---<br>
 <br>
 Version:0.1a1<br>
 <br>
-Preface:<br>
+<b>Preface:</b><br>
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
 library for that, incomplete and full of bugs. Looking around doesn't help me a lot,
 no working libraries (or 'Almost' working ones) so I decided to learn more about this
@@ -20,7 +20,7 @@ Library can drive Oled in 4 or 8 bit mode, it's in a early development stage so 
 probably change but text mode it's 100% functional so it can be used.
 <br>
 <br>
-Connections:<br>
+<b>Connections:</b><br>
 MCP23S17 --> WEH001602A display<br>
 Can work at 3V3 or 5V.<br>
 
