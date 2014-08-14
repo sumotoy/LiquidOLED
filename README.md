@@ -1,7 +1,7 @@
 A driver for winstar <b>WEH001602A</b> Text OLED Module 16*2 that uses 3 wires.<br>
 
 Attention! <br>
----> This driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
+---> Actually this driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
 ---> <u>Alpha development stage!</u> Text working 100%, still develop graphic mode <---<br>
 <br>
 Version:0.1a3<br>
