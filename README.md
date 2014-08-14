@@ -4,7 +4,7 @@ Attention! <br>
 ---> This driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
 ---> <u>Alpha development stage!</u> Text working 100%, still develop graphic mode <---<br>
 <br>
-Version:0.1a1<br>
+Version:0.1a3<br>
 <br>
 <b>Preface:</b><br>
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
