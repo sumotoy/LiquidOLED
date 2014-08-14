@@ -62,8 +62,18 @@ void LiquidOLED::gpioWriteBytes(byte dati, byte controllo){
 	SPI.transfer(controllo);//portB
 	gpioEndSend();
 }
+
+void LiquidOLED::dwrite(uint8_t pat, uint8_t x, uint8_t y) {
+    //command(0x80 + (x&0x7f)); // x position
+    //command(0x40 + (y&0x01)); //y position
+    command(LCD_SETDDRAMADDR | x);
+    command(LCD_SETCGRAMADDR | y);
+    write(pat);
+}
+
 //---------------------------------------
 void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
+	uint8_t i;
 	_lcd_cols = cols;
 	_lcd_lines = lines;
 	//inizializza SPI
@@ -97,8 +107,16 @@ void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 //    Pwr=”1”: Internal DCDC power on
 //
 	if (LCDBITMODE < 8){//4bit
-		_displayfunction = LCD_FUNCTIONSET | LCD_4BITMODE;
+		//_displayfunction = LCD_FUNCTIONSET | LCD_4BITMODE;
 		//_displayfunction = LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS;
+		_displayfunction = LCD_FUNCTIONSET | LCD_4BITMODE | LCD_2LINE | LCD_5x8DOTS | LCD_EUROPEAN_I;
+		_displaycontrol  = LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+		_displaymode     = LCD_MODEPOWER;
+		
+		for (i=0;i<5;i++){
+			command(_displayfunction);//8bit/2Lines/5x8dots/default table 0b00111000
+			delayMicroseconds(5000);
+		}
 		write4bits(0x03);  					//00000011
 		delayMicroseconds(5000);
 		write4bits(0x02);					//00000010
@@ -122,38 +140,46 @@ void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	} else {//8bit
 		
 		_displayfunction = LCD_FUNCTIONSET | LCD_8BITMODE | LCD_2LINE | LCD_5x8DOTS | LCD_EUROPEAN_I;
-		_displaycontrol = LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+		_displaycontrol  = LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+		_displaymode     = LCD_MODEPOWER | LCD_TEXTMODE | LCD_POWERON;
 		
-		command(_displayfunction);//8bit/2Lines/5x8dots/default table 0b00111000
-		delayMicroseconds(5000);
+		for (i=0;i<4;i++){
+			command(_displayfunction);//8bit/2Lines/5x8dots/default table 0b00111000
+			delay(1);
+		}
+		//0b0001
+		//      S/C R/L 00
+		//      GC  PWR 11
 		command(_displaycontrol);
-		delayMicroseconds(5000);
-		command(LCD_CLEARDISPLAY);
-		delayMicroseconds(5000);
+		delay(1);
+		command(LCD_ENTRYMODESET | LCD_INCREMENTBIT);//shift?
+		//command(0b00010100);
+		delay(1);
+
+		command(_displaymode);//starts in textMode! LCD_SETCHARCTERMODE
+		delay(1);
 		command(LCD_RETURNHOME);
-		delayMicroseconds(5000);
-		command(LCD_ENTRYMODESET | LCD_INCREMENTBIT);
-		delayMicroseconds(5000);
+		delay(1);
+		command(LCD_CLEARDISPLAY);
+		delay(1);
 		
 		/*
-		command(0x38); //function set,8-bit transfer,2-lines display & 5*8 dot characteristic, font 00
-		delay(1);
-		command(0x38); //function set,8-bit transfer,2-lines display & 5*8 dot characteristic, font 00
-		delay(1);
-		command(0x38); //function set,8-bit transfer,2-lines display & 5*8 dot characteristic, font 00
-		delay(1);
-		command(0x38); //function set,8-bit transfer,2-lines display & 5*8 dot characteristic, font 00
-		delay(1);
-		command(0x0C); //Display ON/OFF control,Display ON,Cursor&Blink OFF
-		delay(1);
-		command(0x06); //Entry Mode Set, address increment & Shift off
-		delay(1);
-		command(0x1F); //Graphic mode
-		delay(1);
-		command(0x02); //Return Home
-		delay(1);
-		command(0x01); //Clear Display 
-		delay(1);
+		_displayfunction = 0x38;
+		_displaycontrol = 0x0C;
+		for (i=0;i<4;i++){
+			command(_displayfunction);//8bit/2Lines/5x8dots/default table 0b00111000
+			delay(1);
+		}
+		command(_displaycontrol); //Display ON/OFF control,Display ON,Cursor&Blink OFF 
+		delay(1); 
+		command(0x06); //Entry Mode Set, address increment & Shift off 
+		delay(1); 
+		command(LCD_SETCHARCTERMODE); //Graphic mode 
+		delay(1); 
+		command(LCD_RETURNHOME); //Return Home 
+		delay(1); 
+		command(LCD_CLEARDISPLAY); //Clear Display 
+		delay(1); 
 		*/
 	}
 	_currentMode = 0;//starts in textMode!
@@ -162,20 +188,19 @@ void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 void LiquidOLED::setTextMode(bool mode) {
 	if (_currentMode == 1) {
 		//do stuff here to change state (TODO)
+		_displaymode     = LCD_MODEPOWER | LCD_TEXTMODE | LCD_POWERON;
+		command(_displaymode);//starts in textMode! LCD_SETCHARCTERMODE
+		delay(1);
 		_currentMode = 0;
-		command(LCD_SETCHARCTERMODE);
 	}	
 }
 
 void LiquidOLED::setGraphicMode(bool mode) {
 	if (_currentMode == 0) {
-		//do stuff here to change state (TODO)
+		_displaymode     = LCD_MODEPOWER | LCD_GRAPHICMODE | LCD_POWERON;
+		command(_displaymode);//starts in textMode! LCD_SETCHARCTERMODE
+		delay(1);
 		_currentMode = 1;
-		command(0x06);
-		delay(1);
-		command(0x1F);
-		//command(LCD_SETGRAPHICMODE);
-		delay(1);
 	}
 }
 
@@ -219,13 +244,13 @@ inline size_t LiquidOLED::write(uint8_t value) {
 void LiquidOLED::pulseEnable(uint8_t value) {
 	bitClear(_lcdControlPins,LCDPIN_EN);
 	gpioWriteBytes(value,_lcdControlPins);//aggiorna il GPIO
-	delayMicroseconds(40);//1
+	delayMicroseconds(1);//40
 	bitSet(_lcdControlPins,LCDPIN_EN);
 	gpioWriteBytes(value,_lcdControlPins);//aggiorna il GPIO
-	delayMicroseconds(40); //1
+	delayMicroseconds(1); //40
 	bitClear(_lcdControlPins,LCDPIN_EN);
 	gpioWriteBytes(value,_lcdControlPins);//aggiorna il GPIO
-	delayMicroseconds(40);//100
+	delayMicroseconds(1);//40
 }
 
 void LiquidOLED::write4bits(uint8_t value) {
@@ -243,7 +268,6 @@ void LiquidOLED::write4bits(uint8_t value) {
 void LiquidOLED::write8bits(uint8_t value) {
 	uint8_t i;
 	for (i = 0; i < 8; i++) {
-		//digitalWrite(_data_pins[i], (value >> i) & 0x01);
 		if ((value >> i) & 0x01){
 			bitSet(_lcdDataPins,LCDDATAPINS[i]);
 		} else {
@@ -257,23 +281,20 @@ void LiquidOLED::write8bits(uint8_t value) {
 
 void LiquidOLED::clear(){
 	command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
-	delayMicroseconds(800);  // this command takes a long time!
+	delay(7);
 }
 
 void LiquidOLED::home(){
 	command(LCD_RETURNHOME);  // set cursor position to zero
-	delayMicroseconds(800);  // this command takes a long time!
+	delayMicroseconds(1);
 }
 
 void LiquidOLED::setCursor(uint8_t col, uint8_t row){
 	if (_currentMode){
 		//if (col > 100) col = 100;
-		//if (row > 64) row = 64;
-		//command(LCD_SETDDRAMADDR | col);
-		//command(LCD_SETCGRAMADDR | row);
-		command(0x80 + (col&0x7f)); // x position
-		command(0x40 + (row&0x01)); //y position
-		//writeData(pat);
+		//if (row > 1) row = 1;
+		command(LCD_SETDDRAMADDR | col);
+		command(LCD_SETCGRAMADDR | row);
 	} else {
 		int row_offsets[] = { 0x00, 0x40, 0x14, 0x54 };
 		if (row >= _lcd_lines) row = _lcd_lines-1;    // we count rows starting w/0
@@ -320,23 +341,23 @@ void LiquidOLED::scrollDisplayRight(void) {
 }
 
 void LiquidOLED::leftToRight(void) {
-	_displaymode |= LCD_ENTRYLEFT;
-	command(LCD_ENTRYMODESET | _displaymode);
+	_entrymode |= LCD_ENTRYLEFT;
+	command(LCD_ENTRYMODESET | _entrymode);
 }
 
 void LiquidOLED::rightToLeft(void) {
-	_displaymode &= ~LCD_ENTRYLEFT;
-	command(LCD_ENTRYMODESET | _displaymode);
+	_entrymode &= ~LCD_ENTRYLEFT;
+	command(LCD_ENTRYMODESET | _entrymode);
 }
 
 void LiquidOLED::autoscroll(void) {
-	_displaymode |= LCD_ENTRYSHIFTINCREMENT;
-	command(LCD_ENTRYMODESET | _displaymode);
+	_entrymode |= LCD_ENTRYSHIFTINCREMENT;
+	command(LCD_ENTRYMODESET | _entrymode);
 }
 
 void LiquidOLED::noAutoscroll(void) {
-	_displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
-	command(LCD_ENTRYMODESET | _displaymode);
+	_entrymode &= ~LCD_ENTRYSHIFTINCREMENT;
+	command(LCD_ENTRYMODESET | _entrymode);
 }
 
 void LiquidOLED::createChar(uint8_t location, uint8_t charmap[]) {

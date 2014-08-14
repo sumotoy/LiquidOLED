@@ -5,7 +5,7 @@ Attention!
 ---> This driver uses a GPIO Chip called MCP23S17! <---
 ---> Alpha development stage! Text working 100%, still develop graphic mode <---
 
-Version:0.1a1
+Version:0.1a3
 
 Preface:
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
@@ -65,7 +65,14 @@ winstar WEH001602A
 #define LCD_RETURNHOME 			0x02
 #define LCD_ENTRYMODESET 		0x04
 #define LCD_DISPLAYCONTROL 		0x08
+
 #define LCD_CURSORSHIFT 		0x10
+#define LCD_MODEPOWER 			0x13
+#define LCD_POWERON 			0x17//04
+#define LCD_POWEROFF 			0x13
+#define LCD_GRAPHICMODE 		0x1B
+#define LCD_TEXTMODE 			0x17
+
 #define LCD_FUNCTIONSET 		0x20//28
 #define LCD_SETCGRAMADDR 		0x40
 #define LCD_SETDDRAMADDR 		0x80
@@ -107,8 +114,6 @@ winstar WEH001602A
 #define LCD_EUROPEAN_II 		0x03
 #define LCD_RUSSIAN 			0x02
 
-#define LCD_SETGRAPHICMODE 		0x1F
-#define LCD_SETCHARCTERMODE 	0x17
 
 //GPIO
 static const byte IOCON		 = 	0x0A;
@@ -163,6 +168,7 @@ public:
 	bool			getGraphicMode(void);
 	void			setTextMode(bool mode=1);
 	void			setGraphicMode(bool mode=1);
+	void			dwrite(uint8_t pat, uint8_t x, uint8_t y);//experimental
 
 private:
 	int8_t			_x;					//current pos x
@@ -171,6 +177,7 @@ private:
 	byte 			_lcd_lines;			// phisical LCD height
 	uint8_t 		_displayfunction;
 	uint8_t 		_displaycontrol;
+	uint8_t 		_entrymode;
 	uint8_t 		_displaymode;
 	uint8_t			_currentMode;
 //------------------------------------------------------------
