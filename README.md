@@ -17,8 +17,17 @@ will result in 11 pin at minimum! Too much for a cheap and small MCU so what abo
 that let you save almost all pins (if you decide to use HAEN feature and compatible GPIO's)?
 WEH001 controllers are slow, there's no need to coupled directly to MCU to speed up it.
 Library can drive Oled in 4 or 8 bit mode, it's in a early development stage so things will
-probably change but text mode it's 100% functional so it can be used.
+probably change but text mode it's 100% functional so it can be used.<br>
+Another problem it's the winstar documentation...Terrible, incomplete, confused, whatever. Had to spend time to
+digest it and not enough since I have to find a way by experiment in most cases!<br>
+<b>Programming Note.</b><br>
+I'm currently not using the 'wait for ready' routine at all! Reason it's the GPIO combined with slow winstar interface
+has predictable delay that it's enough to avoid that. Things may change in future but can be added by software easily so currently it's enough fast for any applications!
 <br>
+<b>Note about Release Version (when ready)</b><br>
+The release will work in text/graphic mode and with GPIO or in SPI (by change some jumper on the display.
+The reason I still not planned the direct SPI mode is that I just have one display and waiting for a couple more
+to experimenting modes.
 <br>
 <b>Connections:</b><br>
 MCP23S17 --> WEH001602A display<br>
