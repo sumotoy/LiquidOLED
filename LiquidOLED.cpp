@@ -105,9 +105,17 @@ void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	_lcd_lines = lines;
 	//inizializza SPI
 	SPI.begin();
+	#if defined (SPI_HAS_TRANSACTION)
+	if (_SPItransactionSpeed < 1){
+		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
+		SPI.setBitOrder(MSBFIRST);
+		SPI.setDataMode(SPI_MODE0);
+	}
+	#else
 	SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 	SPI.setBitOrder(MSBFIRST);
 	SPI.setDataMode(SPI_MODE0);
+	#endif
 	pinMode(_cs_Pin, OUTPUT);
 	digitalWrite(_cs_Pin, HIGH);
 	delay(100);
