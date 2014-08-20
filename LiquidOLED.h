@@ -5,7 +5,9 @@ Attention!
 ---> This driver uses a GPIO Chip called MCP23S17! <---
 ---> Alpha development stage! Text working 100%, still develop graphic mode <---
 
-Version:0.1a3
+Version:0.1a4
+
+Added support for SPI transactions
 
 Preface:
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
@@ -145,6 +147,7 @@ static const uint8_t LCDPIN_EN 		   =	2;//10;// enable pin    2B
 class LiquidOLED : public Print {//
 public:
 	LiquidOLED(uint8_t address,uint8_t cspin);
+	LiquidOLED(uint8_t address,uint8_t cspin, uint32_t spispeed);
     
 	void 			begin(uint8_t cols, uint8_t rows,uint8_t charsize = LCD_5x8DOTS);
 	void 			clear();
@@ -193,6 +196,7 @@ void 				write4bits(uint8_t value);
 	uint8_t 		_writeCmd;
 	byte			_lcdControlPins;//lo stato dei pin di controllo
 	byte			_lcdDataPins;	//lo stato dei pin dati
+	uint32_t		_SPItransactionSpeed;
 	void 			gpioStartSend(bool mode);
 	void 			gpioEndSend();
 	void 			gpioWriteByte(byte reg, byte data);

@@ -20,13 +20,38 @@ LiquidOLED::LiquidOLED(uint8_t address,uint8_t cspin){
 	//inizializza i dati dell'LCD
 	_x = 0;
 	_y = 0;
+	_SPItransactionSpeed = 0;
+}
+
+LiquidOLED::LiquidOLED(uint8_t address,uint8_t cspin,uint32_t spispeed){
+	//dati per il GPIO
+	_address = address;
+	_cs_Pin = cspin;
+	_readCmd =  (_address << 1) | 1;
+	_writeCmd = _address << 1;
+	_lcdControlPins = 0b00000000;
+	_lcdDataPins = 0b00000000;
+	//inizializza i dati dell'LCD
+	_x = 0;
+	_y = 0;
+	#if defined (SPI_HAS_TRANSACTION)
+	_SPItransactionSpeed = spispeed;
+	#else
+	_SPItransactionSpeed = 0;
+	#endif
 }
 
 //----------------------------------------GPIO
 void LiquidOLED::gpioStartSend(bool mode){
 #if defined(__MK20DX128__) || defined(__MK20DX256__)
+	#if defined (SPI_HAS_TRANSACTION)
+	SPI.beginTransaction(SPISettings(_SPItransactionSpeed, MSBFIRST, SPI_MODE0));
+	#endif
 	digitalWriteFast(_cs_Pin, LOW);
 #else
+	#if defined (SPI_HAS_TRANSACTION)
+	SPI.beginTransaction(SPISettings(_SPItransactionSpeed, MSBFIRST, SPI_MODE0));
+	#endif
 	digitalWrite(_cs_Pin, LOW);
 #endif
 	mode == 1 ? SPI.transfer(_readCmd) : SPI.transfer(_writeCmd);
@@ -38,6 +63,9 @@ void LiquidOLED::gpioEndSend(){
 #else
 	digitalWrite(_cs_Pin, HIGH);
 #endif
+	#if defined (SPI_HAS_TRANSACTION)
+	 SPI.endTransaction();
+	#endif
 }
 
 void LiquidOLED::gpioWriteByte(byte reg, byte data){
