@@ -4,7 +4,10 @@ Attention! <br>
 ---> Actually this driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
 ---> <u>Alpha development stage!</u> Text working 100%, still develop graphic mode <---<br>
 <br>
-Version:0.1a3<br>
+Version:0.1a4<br>
+Added basic support for SPI transactions!<br>
+Just initialize this LiquidOLED lcd(0x20,6); to this LiquidOLED lcd(0x20,6,24000000);<br>
+If ide support SPI transactions it will use it.
 <br>
 <b>Preface:</b><br>
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
