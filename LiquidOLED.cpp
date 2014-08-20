@@ -35,17 +35,24 @@ LiquidOLED::LiquidOLED(uint8_t address,uint8_t cspin,uint32_t spispeed){
 	_x = 0;
 	_y = 0;
 	#if defined (SPI_HAS_TRANSACTION)
-	_SPItransactionSpeed = spispeed;
+	if (spispeed > 0){
+		if (spispeed > MAXSPISPEED) {
+			_SPItransactionSpeed = MAXSPISPEED;//set to max supported speed (in relation to chip and CPU)
+		} else {
+			_SPItransactionSpeed = spispeed;
+		}
+	} else {
+		_SPItransactionSpeed = 0;//do not use SPItransactons
+	}
 	#else
-	_SPItransactionSpeed = 0;
+	_SPItransactionSpeed = 0;//do not use SPItransactons
 	#endif
 }
 
 //----------------------------------------GPIO
 void LiquidOLED::gpioStartSend(bool mode){
 	#if defined (SPI_HAS_TRANSACTION)
-	if (_SPItransactionSpeed > 0)
-	SPI.beginTransaction(SPISettings(_SPItransactionSpeed, MSBFIRST, SPI_MODE0));
+	if (_SPItransactionSpeed > 0) SPI.beginTransaction(SPISettings(_SPItransactionSpeed, MSBFIRST, SPI_MODE0));
 	#endif
 #if defined(__MK20DX128__) || defined(__MK20DX256__)
 	digitalWriteFast(_cs_Pin, LOW);
@@ -62,8 +69,7 @@ void LiquidOLED::gpioEndSend(){
 	digitalWrite(_cs_Pin, HIGH);
 #endif
 	#if defined (SPI_HAS_TRANSACTION)
-	if (_SPItransactionSpeed > 0)
-	 SPI.endTransaction();
+	if (_SPItransactionSpeed > 0) SPI.endTransaction();
 	#endif
 }
 
@@ -106,12 +112,12 @@ void LiquidOLED::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 	//inizializza SPI
 	SPI.begin();
 	#if defined (SPI_HAS_TRANSACTION)
-	if (_SPItransactionSpeed < 1){
+	if (_SPItransactionSpeed == 0){//do not use SPItransactons
 		SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 		SPI.setBitOrder(MSBFIRST);
 		SPI.setDataMode(SPI_MODE0);
 	}
-	#else
+	#else//do not use SPItransactons
 	SPI.setClockDivider(SPI_CLOCK_DIV4); // 4 MHz (half speed)
 	SPI.setBitOrder(MSBFIRST);
 	SPI.setDataMode(SPI_MODE0);
