@@ -10,7 +10,8 @@ Just initialize this LiquidOLED lcd(0x20,6); to this LiquidOLED lcd(0x20,6,24000
 where the third parameter it's the desidered SPI speed in Mhz, you should input a resonable value that it's compatible
 with your CPU and gpio chip or it will simply not work.The library has a simple protection for too high frequency that it's useful if you switch a code from Teensy3 to Arduino UNO, setting too high frequency will force the library to use
 the max supported speed in relation to CPU used.
-If you have installed the new SPI library with SPI transactions now you have the opportunity to use!
+If you have installed the new SPI library with SPI transactions now you have the opportunity to use it!<br>
+With new SPI transaction and Teensy3.1 I've got 1200Fps/0,70ms using SpeedTest.ino example, pretty impressive!<br>
 
 <br>
 <b>Preface:</b><br>
