@@ -7,7 +7,11 @@ Attention! <br>
 Version:0.1a4<br>
 Added basic support for SPI transactions!<br>
 Just initialize this LiquidOLED lcd(0x20,6); to this LiquidOLED lcd(0x20,6,24000000);<br>
-If ide support SPI transactions it will use it.
+where the third parameter it's the desidered SPI speed in Mhz, you should input a resonable value that it's compatible
+with your CPU and gpio chip or it will simply not work.The library has a simple protection for too high frequency that it's useful if you switch a code from Teensy3 to Arduino UNO, setting too high frequency will force the library to use
+the max supported speed in relation to CPU used.
+If you have installed the new SPI library with SPI transactions now you have the opportunity to use!
+
 <br>
 <b>Preface:</b><br>
 This display can be easily buy in Ebay and from Adafruit that provided a terrible
