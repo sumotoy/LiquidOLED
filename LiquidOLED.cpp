@@ -3,8 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
+#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
+#include "Energia.h"
+#else
 #include "Arduino.h"
-#include <../SPI/SPI.h>//this chip needs SPI
+#endif
+#include <SPI.h>//this chip needs SPI
 
 
 
