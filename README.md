@@ -4,7 +4,8 @@ Attention! <br>
 ---> Actually this driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
 ---> <u>Alpha development stage!</u> Text working 100%, still develop graphic mode <---<br>
 <br>
-Version:0.1a4<br>
+Version:0.1a5<br>
+Should work with Energia IDE supported MCU's (stellaris, etc.)<br>
 Added basic support for SPI transitions!<br>
 Just initialize this LiquidOLED lcd(0x20,6); to this LiquidOLED lcd(0x20,6,24000000);<br>
 where the third parameter it's the desidered SPI speed in Mhz, you should input a resonable value that it's compatible
