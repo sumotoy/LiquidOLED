@@ -38,7 +38,7 @@ The reason I still not planned the direct SPI mode is that I just have one displ
 to experimenting modes.
 <br>
 <b>Connections:</b><br>
-MCP23S17 --> WEH001602A display<br>
+MCP23S17 ==> WEH001602A display<br>
 Can work at 3V3 or 5V.<br>
 
 	  RW	-->	  IOB-0 [|   U  |] IOA-7	-->	D7
