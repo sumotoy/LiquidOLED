@@ -1,4 +1,5 @@
 A driver for winstar <b>WEH001602A</b> Text OLED Module 16*2 that uses 3 wires.<br>
+**Warning**: Energia support just as it's basic stage and not tested. It compiles but doesn't mean that will works! So please wait I test it (and prolly fix) before use it with Energia MCU's!<br>
 
 Attention! <br>
 ---> Actually this driver uses a GPIO Chip called <b>MCP23S17</b>! (microchip) <---<br>
