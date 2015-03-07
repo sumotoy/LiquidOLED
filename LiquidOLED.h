@@ -5,7 +5,7 @@ Attention!
 ---> This driver uses a GPIO Chip called MCP23S17! <---
 ---> Alpha development stage! Text working 100%, still develop graphic mode <---
 
-Version:0.1a5 - compatible(?) with Energia IDE (Stellaris, etc.)
+Version:0.1a4
 
 Added support for SPI transactions
 
@@ -26,7 +26,7 @@ probably change but text mode it's 100% functional so it can be used.
 Connections:
 MCP23S17 --> WEH001602A display
 Can work at 3V3 or 5V.
-					
+
 	RW	-->	  IOB-0 [|  U   |] IOA-7	-->	D7
 	RS  -->	  IOB-1 [| 	 	|] IOA-6	-->	D6
 	E   -->	  IOB-2 [| 	 	|] IOA-5	-->	D5
@@ -52,15 +52,9 @@ Can work at 3V3 or 5V.
 #define LiquidOLED__h
 
 #include <inttypes.h>
-
-#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
-#include "Energia.h"
-#else
 #include "Arduino.h"
-#endif
-
 #include "Print.h"
-#include <SPI.h>//this chip needs SPI
+#include <../SPI/SPI.h>//this chip needs SPI
 
 
 #define LCDBITMODE				8
@@ -124,19 +118,21 @@ winstar WEH001602A
 
 //defining max SPI speed (not definitive and can change in relation to chip used)
 #if defined (SPI_HAS_TRANSACTION)
-	#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0 or 3.1
-		#define MAXSPISPEED				48000000
-	#elif defined(ARDUINO) && defined(__arm__) && !defined(CORE_TEENSY)	//DUE	
-		#define MAXSPISPEED				24000000
-	#elif defined(__32MX320F128H__) || defined(__32MX795F512L__) //uno and max		
-		#define MAXSPISPEED				8000000
-	#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-		#define MAXSPISPEED				2000000
-	#elif defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644PA__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__)
-		#define MAXSPISPEED				8000000
-	#else
-		#define MAXSPISPEED				8000000
-	#endif
+#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0 or 3.1
+#define MAXSPISPEED				30000000
+#elif defined(__MKL26Z64__)//Teensy  LC
+#define MAXSPISPEED				30000000
+#elif defined(ARDUINO) && defined(__arm__) && !defined(CORE_TEENSY)	//DUE	
+#define MAXSPISPEED				24000000
+#elif defined(__32MX320F128H__) || defined(__32MX795F512L__) //uno and max		
+#define MAXSPISPEED				8000000
+#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#define MAXSPISPEED				2000000
+#elif defined (__AVR_ATmega328P__) || defined (__AVR_ATmega168P__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644PA__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__)
+#define MAXSPISPEED				8000000
+#else
+#define MAXSPISPEED				2000000
+#endif
 #endif
 
 

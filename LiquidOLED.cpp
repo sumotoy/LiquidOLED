@@ -3,12 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-#if defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
-#include "Energia.h"
-#else
 #include "Arduino.h"
-#endif
-#include <SPI.h>//this chip needs SPI
+#include <../SPI/SPI.h>//this chip needs SPI
 
 
 
@@ -58,7 +54,7 @@ void LiquidOLED::gpioStartSend(bool mode){
 	#if defined (SPI_HAS_TRANSACTION)
 	if (_SPItransactionSpeed > 0) SPI.beginTransaction(SPISettings(_SPItransactionSpeed, MSBFIRST, SPI_MODE0));
 	#endif
-#if defined(__MK20DX128__) || defined(__MK20DX256__)
+#if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MKL26Z64__)//Teensy 3.0 or 3.1 or LC
 	digitalWriteFast(_cs_Pin, LOW);
 #else
 	digitalWrite(_cs_Pin, LOW);
@@ -67,7 +63,7 @@ void LiquidOLED::gpioStartSend(bool mode){
 }
 
 void LiquidOLED::gpioEndSend(){
-#if defined(__MK20DX128__) || defined(__MK20DX256__)
+#if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MKL26Z64__)//Teensy 3.0 or 3.1 or LC
 	digitalWriteFast(_cs_Pin, HIGH);
 #else
 	digitalWrite(_cs_Pin, HIGH);
